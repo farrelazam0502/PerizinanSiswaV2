@@ -7,7 +7,7 @@ use App\Http\Controllers\Student\PermitController as StudentPermitController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages.welcome');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -25,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/permits', [StudentPermitController::class, 'index'])->name('permits.index');
         Route::get('/permits/create', [StudentPermitController::class, 'create'])->name('permits.create');
         Route::post('/permits', [StudentPermitController::class, 'store'])->name('permits.store');
+        Route::delete('/permits/{permit}', [StudentPermitController::class, 'destroy'])->name('permits.destroy');
     });
 
     // Khusus Admin

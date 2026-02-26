@@ -14,7 +14,7 @@ class PermitController extends Controller
     public function index()
     {
         $permits = Permit::with('user')->latest()->get();
-        return view('admin.dashboard', compact('permits'));
+        return view('pages.admin.dashboard', compact('permits'));
     }
 
     /**

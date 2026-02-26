@@ -16,7 +16,7 @@ class PermitController extends Controller
     public function index()
     {
         $permits = Auth::user()->permits()->latest()->get();
-        return view('permits.index', compact('permits'));
+        return view('pages.student.permits.index', compact('permits'));
     }
 
     /**
@@ -24,7 +24,7 @@ class PermitController extends Controller
      */
     public function create()
     {
-        return view('permits.create');
+        return view('pages.student.permits.create');
     }
 
     /**
@@ -35,6 +35,25 @@ class PermitController extends Controller
         $request->user()->permits()->create($request->validated());
 
         return redirect()->route('student.permits.index')->with('success', 'Permohonan izin berhasil diajukan!');
+    }
+
+    /**
+     * Remove the specified permit from storage.
+     */
+    public function destroy(Permit $permit)
+    {
+        // Ensure student only cancels their own pending permit
+        if ($permit->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($permit->status !== 'pending') {
+            return back()->with('error', 'Hanya perizinan yang masih pending yang dapat dibatalkan.');
+        }
+
+        $permit->delete();
+
+        return redirect()->route('student.permits.index')->with('success', 'Permohonan izin berhasil dibatalkan.');
     }
 }
 
